@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plansza 5x5</title>
+    <style>
+        #board {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            grid-template-rows: repeat(5, 50px);
+            gap: 2px;
+            margin-top: 10px;
+        }
+        .cell {
+            width: 50px;
+            height: 50px;
+            background-color: beige;
+        }
+    </style>
+</head>
+<body>
+
+<label for="starter">Kto zaczyna:</label>
+<select id="starter" onchange="generateBoard()">
+    <option value="blue">Niebiescy</option>
+    <option value="red">Czerwoni</option>
+</select>
+
+<div id="board"></div>
+
+<script>
+    // Ustawienia
+    const boardSize = 5 * 5; // 25 pól
+
+    function generateBoard() {
+        const board = document.getElementById("board");
+        const starter = document.getElementById("starter").value; // Pobierz wybrany kolor
+
+        // Ustal liczbę pól na podstawie tego, kto zaczyna
+        const colors = {
+            black: 1,
+            blue: starter === 'blue' ? 9 : 8,
+            red: starter === 'red' ? 9 : 8,
+            beige: boardSize - (1 + (starter === 'blue' ? 9 : 8) + (starter === 'red' ? 9 : 8))
+        };
+
+        board.innerHTML = ''; // Czyści planszę
+
+        // Tworzenie losowej kolejności kolorów
+        let colorArray = [];
+
+        for (let color in colors) {
+            for (let i = 0; i < colors[color]; i++) {
+                colorArray.push(color);
+            }
+        }
+
+        // Mieszanie kolorów
+        colorArray = colorArray.sort(() => Math.random() - 0.5);
+
+        // Generowanie planszy
+        colorArray.forEach(color => {
+            const cell = document.createElement("div");
+            cell.classList.add("cell");
+
+            // Ustawienia kolorów dla poszczególnych typów pól
+            if (color === 'black') {
+                cell.style.backgroundColor = '#333333'; // ciemny szary prawie czarny
+            } else if (color === 'blue') {
+                cell.style.backgroundColor = '#4682b4'; // mocny stalowy niebieski
+            } else if (color === 'red') {
+                cell.style.backgroundColor = '#ff6347'; // wyrazisty czerwony (pomidorowy)
+            } else {
+                cell.style.backgroundColor = 'beige'; // beżowy
+            }
+
+            board.appendChild(cell);
+        });
+    }
+
+    // Wygeneruj planszę przy pierwszym załadowaniu strony
+    generateBoard();
+</script>
+
+</body>
+</html>
+
